@@ -1,3 +1,5 @@
 * 1.0.1 Merge route refactoring from tibbe/ekg
 
+  - Fix asset routes, as they didn't work before.
+
 * 1.0.0 Initial release of erudify-ekg fork

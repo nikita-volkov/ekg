@@ -8,7 +8,7 @@ module System.Remote.Snap
 
 import Control.Applicative ((<$>), (<|>))
 import Control.Exception (throwIO)
-import Control.Monad (join, unless)
+import Control.Monad (guard, join, unless)
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson.Types as A
 import qualified Data.ByteString as S
@@ -128,11 +128,6 @@ serveMany mapRef = do
 serveAll :: MonadSnap m
          => IORef Counters -> IORef Gauges -> IORef Labels -> m ()
 serveAll counters gauges labels = do
-    req <- getRequest
-    -- Workaround: Snap still matches requests to /foo to this handler
-    -- if the Accept header is "application/json", even though such
-    -- requests ought to go to the 'serveOne' handler.
-    unless (S.null $ rqPathInfo req) pass
     modifyResponse $ setContentType "application/json"
     bs <- liftIO $ buildAll counters gauges labels
     writeLBS bs
@@ -170,22 +165,24 @@ serveOne refs = do
 serveAssets :: MonadSnap m => m ()
 serveAssets = serveEmbeddedFiles $(embedDir "assets")
 
+
 -- | Serve a list of files under the given filepaths while selecting the MIME
 --type using the 'defaultMimeMap'.
 serveEmbeddedFiles :: MonadSnap m => [(FilePath, S8.ByteString)] -> m ()
 serveEmbeddedFiles files = do
-      req <- getRequest
-      fromMaybe pass $ M.lookup (rqURI req) table
+      route (concatMap mkAssetRoutes files)
     where
-      table         = M.fromList $ do
-          (path, content) <- files
-          let err  = error $ "Failed to determine MIME type of '" ++ path ++ "'"
-              mime = fromMaybe err $
-                         M.lookup (takeExtension path) defaultMimeTypes
-          return ( S8.pack path
-                 , do modifyResponse
-                        $ setContentType mime
-                        . setContentLength (fromIntegral $ S8.length content)
-                        . setResponseCode 200
-                      writeBS content
-                 )
+      mkAssetRoutes (path, content) =
+              do return (S8.pack path, handler)
+          <|> do guard (path == "index.html")
+                 return (S8.empty, handler)
+        where
+          err  = error $ "Failed to determine MIME type of '" ++ path ++ "'"
+          mime = fromMaybe err $
+                     M.lookup (takeExtension path) defaultMimeTypes
+          handler = do
+              modifyResponse
+                $ setContentType mime
+                . setContentLength (fromIntegral $ S8.length content)
+                . setResponseCode 200
+              writeBS content
