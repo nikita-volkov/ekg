@@ -1,5 +1,5 @@
 name:                erudify-ekg
-version:             1.0.2
+version:             1.0.3
 synopsis:            Remote monitoring of processes at Erudify
 description:
   This is a clone of the `ekg` library published on hackage. It embeds
@@ -17,7 +17,7 @@ category:            System, Network
 build-type:          Simple
 cabal-version:       >=1.6
 extra-source-files:  LICENSE.icons LICENSE.javascript README.md
-                     assets/jquery-1.6.4.js assets/jquery.flot.js
+                     assets-dev/jquery-1.6.4.js assets-dev/jquery.flot.js
                      examples/Basic.hs
 
                      assets/index.html assets/monitor.js assets/monitor.css
