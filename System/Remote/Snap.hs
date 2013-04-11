@@ -8,7 +8,7 @@ module System.Remote.Snap
 
 import Control.Applicative ((<$>), (<|>))
 import Control.Exception (throwIO)
-import Control.Monad (guard, join, unless)
+import Control.Monad (guard, join)
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson.Types as A
 import qualified Data.ByteString as S
@@ -25,7 +25,7 @@ import Network.Socket (NameInfoFlag(NI_NUMERICHOST), addrAddress, getAddrInfo,
 import Prelude hiding (read)
 import Snap.Core (MonadSnap, Request, Snap, finishWith, getHeaders, getRequest,
                   getResponse, method, Method(GET), modifyResponse, pass, route,
-                  rqURI, rqParams, rqPathInfo, setContentType, setResponseStatus,
+                  rqParams, rqPathInfo, setContentType, setResponseStatus,
                   writeBS, writeLBS, setResponseCode, setContentLength, )
 import Snap.Http.Server (httpServe)
 import qualified Snap.Http.Server.Config as Config

@@ -1,5 +1,5 @@
 name:                erudify-ekg
-version:             1.0.1
+version:             1.0.2
 synopsis:            Remote monitoring of processes at Erudify
 description:
   This is a clone of the `ekg` library published on hackage. It embeds
