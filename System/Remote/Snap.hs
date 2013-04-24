@@ -7,7 +7,6 @@ module System.Remote.Snap
     ) where
 
 import Control.Applicative ((<$>), (<|>))
-import Control.Exception (throwIO)
 import Control.Monad (guard, join)
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson.Types as A
@@ -20,8 +19,6 @@ import qualified Data.Map as Map
 import Data.Maybe (fromMaybe, listToMaybe)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import Network.Socket (NameInfoFlag(NI_NUMERICHOST), addrAddress, getAddrInfo,
-                       getNameInfo)
 import Prelude hiding (read)
 import Snap.Core (MonadSnap, Request, Snap, finishWith, getHeaders, getRequest,
                   getResponse, method, Method(GET), modifyResponse, pass, route,
