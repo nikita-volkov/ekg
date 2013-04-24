@@ -215,11 +215,12 @@ serverThreadId = threadId
 -- available: \"application\/json\", \"text\/html\", and
 -- \"text\/plain\".
 forkServer :: S.ByteString  -- ^ Host to listen on (e.g. \"localhost\")
+           -> S.ByteString  -- ^ Address to bind to (e.g., \"127.0.0.1\")
            -> Int           -- ^ Port to listen on (e.g. 8000)
            -> IO Server
-forkServer host port = do
+forkServer host bindAddr port = do
     counters <- newIORef M.empty
     gauges <- newIORef M.empty
     labels <- newIORef M.empty
-    tid <- forkIO $ startServer counters gauges labels host port
+    tid <- forkIO $ startServer counters gauges labels host bindAddr port
     return $! Server tid counters gauges labels

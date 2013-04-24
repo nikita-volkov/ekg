@@ -1,3 +1,4 @@
+* 2.0.0 Explicitly configure bind address
 * 1.0.3 Fix extra-source-file references
 * 1.0.2 -Wall cleaning
 * 1.0.1 
